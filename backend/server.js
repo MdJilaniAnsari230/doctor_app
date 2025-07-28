@@ -19,7 +19,7 @@ connectCloudinary();
 const allowedOrigins = [
   'https://doctor-appfront-tbb8nwl9t-md-jilani-ansaris-projects.vercel.app',
   'https://doctor-appfront.vercel.app',
-  'http://localhost:5173'
+  'https://doctor-app-a6wb.onrender.com'
 ];
 
 app.use(cors({
