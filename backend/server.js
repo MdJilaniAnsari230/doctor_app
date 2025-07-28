@@ -20,7 +20,6 @@ const allowedOrigins = [
   'https://doctor-appfront-tbb8nwl9t-md-jilani-ansaris-projects.vercel.app',
   'https://doctor-appfront.vercel.app',
   'https://doctor-app-psi-bice.vercel.app',  // ← no trailing slash
-  'https://doctor-app-a6wb.onrender.com',
   'http://localhost:5173'                     // Local development
 ];
 
