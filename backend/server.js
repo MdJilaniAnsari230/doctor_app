@@ -7,64 +7,60 @@ import adminRouter from './routes/adminRoute.js';
 import doctorRouter from './routes/doctorRoute.js';
 import userRouter from './routes/userRoute.js';
 
-// App config
 const app = express();
 const port = process.env.PORT || 4000;
 
-// Connect DB and Cloudinary
 connectDB();
 connectCloudinary();
 
-// Allowed front‑end origins
 const allowedOrigins = [
   'https://doctor-appfront-tbb8nwl9t-md-jilani-ansaris-projects.vercel.app',
   'https://doctor-appfront.vercel.app',
-  'https://doctor-app-psi-bice.vercel.app',  // ← no trailing slash
-  'http://localhost:5173'                     // Local development
+  'https://doctor-app-psi-bice.vercel.app',
+  'http://localhost:5173'
 ];
 
-// CORS config
+// Enhanced CORS configuration
 const corsOptions = {
   origin: (origin, callback) => {
-    // allow requests with no origin (e.g. Postman, mobile)
     if (!origin || allowedOrigins.includes(origin)) {
-      return callback(null, true);
+      callback(null, true);
+    } else {
+      console.warn(`🚫 Blocked by CORS: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
     }
-    console.warn(`Blocked by CORS, origin: ${origin}`);
-    return callback(new Error('Not allowed by CORS'));
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
+  optionsSuccessStatus: 200 // Legacy browser support
 };
 
-// Enable CORS & preflight
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+// Apply CORS globally
+app.use(cors(corsOptions)); // Handles all routes including OPTIONS
 
 // JSON body parsing
 app.use(express.json());
 
-// API routes
-app.use('/api/admin',   adminRouter);
-app.use('/api/doctor',  doctorRouter);
-app.use('/api/user',    userRouter);
+// Routes
+app.use('/api/admin', adminRouter);
+app.use('/api/doctor', doctorRouter);
+app.use('/api/user', userRouter);
 
-// Health‑check
+// Health-check
 app.get('/', (req, res) => {
   res.send('API WORKING');
 });
 
-// Global error handler (catches CORS rejects too)
+// Global error handler
 app.use((err, req, res, next) => {
   if (err.message === 'Not allowed by CORS') {
     return res.status(403).json({ error: err.message });
   }
-  console.error(err);
-  res.status(500).json({ error: 'Something went wrong' });
+  console.error('🔥 Server Error:', err);
+  res.status(500).json({ error: 'Internal server error' });
 });
 
-// Start server
 app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
+  console.log(`✅ Server running on port ${port}`);
 });
