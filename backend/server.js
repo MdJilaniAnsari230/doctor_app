@@ -15,8 +15,27 @@ connectDB();
 connectCloudinary()
 
 //middlewares
-app.use(express.json())
-app.use(cors())
+app.use(cors({
+    origin: 'https://doctor-appfront-tbb8nwl9t-md-jilani-ansaris-projects.vercel.app', // frontend domain
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+}));
+
+// If you need to allow multiple origins, use a function:
+app.use(cors({
+    origin: (origin, callback) => {
+        const allowedOrigins = [
+            'https://doctor-appfront-tbb8nwl9t-md-jilani-ansaris-projects.vercel.app',
+            'http://localhost:5173'
+        ];
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+}));
 
 //API endpoints
 app.use('/api/admin' , adminRouter)
