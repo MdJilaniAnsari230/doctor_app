@@ -20,18 +20,18 @@ const allowedOrigins = [
   'https://doctor-appfront-tbb8nwl9t-md-jilani-ansaris-projects.vercel.app',
   'https://doctor-appfront.vercel.app',
   'https://doctor-app-a6wb.onrender.com',
-  'https://doctor-app-psi-bice.vercel.app/',
-    'http://localhost:5173' // Local development
+  'https://doctor-app-psi-bice.vercel.app',  // ← no trailing slash
+  'http://localhost:5173'                     // Local development
 ];
 
 // CORS config
 const corsOptions = {
   origin: (origin, callback) => {
-    // allow requests with no origin (mobile apps, curl, Postman)
+    // allow requests with no origin (e.g. Postman, mobile)
     if (!origin || allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
-    // otherwise block
+    console.warn(`Blocked by CORS, origin: ${origin}`);
     return callback(new Error('Not allowed by CORS'));
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -39,9 +39,9 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With']
 };
 
-// Enable CORS + preflight across your entire API
+// Enable CORS & preflight
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));  
+app.options('*', cors(corsOptions));
 
 // JSON body parsing
 app.use(express.json());
@@ -56,12 +56,12 @@ app.get('/', (req, res) => {
   res.send('API WORKING');
 });
 
-// Global error handler (to catch CORS errors, etc.)
+// Global error handler (catches CORS rejects too)
 app.use((err, req, res, next) => {
   if (err.message === 'Not allowed by CORS') {
     return res.status(403).json({ error: err.message });
   }
-  console.error(err.stack);
+  console.error(err);
   res.status(500).json({ error: 'Something went wrong' });
 });
 
