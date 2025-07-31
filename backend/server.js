@@ -14,10 +14,7 @@ connectDB();
 connectCloudinary();
 
 const allowedOrigins = [
-  'https://doctor-appfront-tbb8nwl9t-md-jilani-ansaris-projects.vercel.app',
-  'https://doctor-appfront.vercel.app',
-  'https://doctor-app-psi-bice.vercel.app',
-  'http://localhost:5173'
+  '*'
 ];
 
 // Enhanced CORS configuration
