@@ -28,7 +28,8 @@ const corsOptions = {
     'Accept',
     'Origin',
     'X-Requested-With',
-    'token'  // 👈 add this
+    'token',  // 👈 add this
+    'atoken'
   ],
   optionsSuccessStatus: 200
 };
