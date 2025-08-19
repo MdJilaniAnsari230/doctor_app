@@ -30,7 +30,7 @@ const addDoctor = async (req , res)=>{
         //validating password
 
         if(password.length<8){
-            return res.json({success:false , message:"enter stong password"})
+            return res.json({success:false , message:"enter strong password"})
         }
 
         //hashing password
